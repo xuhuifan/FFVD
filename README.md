@@ -9,6 +9,11 @@ The main workhorse of our library is the `FFVD_Main.py` function.
 
 
 ## Code structure
+```
+Factnonlin_ini: the model initializations (trained by factorized non-linear model)
+data: the six real world datasets
+vfegpssm: the source code of FFVD
+```
 
 
 ### Requirements
