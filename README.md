@@ -34,21 +34,17 @@ python FFVD_Main.py
 The full list of command line options for the script is:
 
 ```
-    --num_inducing: number of inducing points, type=int, default=100
-    --iterations: number of iterations in FFVD, type=int, default=2000
-    --posterior_sample_spacing: number of sample spacing in SG-HMC, type=int, default=50
-
-    --file_id: the index of initialization file, type=int, default=3
-    --file_index: the index of dataset, type=int, default=2
-    --case_val: which model configuration we are using, type=int, default=4
-
-    --x_dims: number of latent states, type=list, default=[4]
-
-    --samples: number of posterior samples, type=int, default=10
-
-    --ratio: training versus testing data, type = float, default=0.5
-    --kernel_type: kernel typle used in GP, choices=['SquaredExponential', 'LinearK'], default='SquaredExponential'
-    --data_index: type=int, default=4
+--iterations: number of iterations in FFVD, type=int, default=2000
+--num_inducing: number of inducing points, type=int, default=100
+--posterior_sample_spacing: number of sample spacing in SG-HMC, type=int, default=50
+--file_id: the index of initialization file, type=int, default=3
+--file_index: the index of dataset, type=int, default=2
+--case_val: which model configuration we are using, type=int, default=4
+--x_dims: number of latent states, type=list, default=[4]
+--samples: number of posterior samples, type=int, default=10
+--ratio: training versus testing data, type = float, default=0.5
+--kernel_type: kernel typle used in GP, choices=['SquaredExponential', 'LinearK'], default='SquaredExponential'
+--data_index: type=int, default=4
 ```
 
 
