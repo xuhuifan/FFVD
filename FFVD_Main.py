@@ -133,7 +133,7 @@ def load_synthetic_data(file_path):
 
 def create_dataset(file_path):
     # names_seq = ['ballbeam', 'dryer', 'flutter', 'actuator', 'drive', 'gas_furnace']
-    pathss = '../data/'
+    pathss = 'data/'
     # file_path = data_i
     # data_i = [index_i if file_path[:-1] == names_seq[index_i] for index_i in range()]
     if (file_path == 'ballbeam/') or (file_path == 'dryer/') or (file_path == 'flutter/'):
@@ -231,19 +231,6 @@ def main(file_path, ini_file):
 
     model = RegressionModel(args.prior_type)
 
-    # filess = glob.glob(file_path+'*.npz')
-    # file_i = filess[file_index]
-    # ids = file_i[9:(-18)]
-    # syndata = np.load(file_i)
-    # # syndata = np.load('result/synthetic_data_dim_'+str(args.x_dims[0])+'.npz')
-
-    # model.ARGS.CC = syndata['CC']
-    # model.ARGS.DD = syndata['DD']
-    # model.ARGS.QQ_chol = syndata['QQ_chol']
-    # model.ARGS.RR_chol = syndata['RR_chol']
-    # # model.ARGS.lengthscales = syndata['lengthscale']
-    # # model.ARGS.variance = syndata['variance']
-    # model.ARGS.ZZ = tf.convert_to_tensor(syndata['ZZ'])
 
     if file_path == 'linear_dynamic_systems/':
         model.ARGS.CC = tf.convert_to_tensor(CC)
@@ -259,16 +246,10 @@ def main(file_path, ini_file):
         model.ARGS.DD = tf.convert_to_tensor(d_val_ini, dtype = tf.float64)
         model.ARGS.QQ_chol = Q_sqrt_ini
         model.ARGS.RR_chol = tf.convert_to_tensor(R_chol_val_ini, dtype = tf.float64)
-    # model.ARGS.lengthscales = syndata['lengthscale']
-    # model.ARGS.variance = syndata['variance']
-    # model.ARGS.ZZ = tf.convert_to_tensor(np.linspace(-4, 4, args.num_inducing)[:, None])
 
-
-    # model.ARGS.UU = syndata['UU']
-    # model.ARGS.XX = tf.convert_to_tensor(syndata['xx_seq'])
     model.ARGS.lengthscales = kernel_lengthscales
     model.ARGS.variance = kernel_variance
-    # model.ARGS.ZZ = None
+
     model.ARGS.UU_ini = Umu_ini.T
     model.ARGS.XX_0_ini = qx1_mu_ini
     model.ARGS.x_initialization = x_samples_training_factnonlin
@@ -344,18 +325,7 @@ def main(file_path, ini_file):
 
     model.ARGS.PG_particles = 100
 
-    # if model.ARGS.U_kernel_optimization:
-    #     # tensorboard_savepath = '/scratch/v14/xf5259/gpssm/vfe/all_optimized_elbo_optimal_v1'
-    #     # tensorboard_savepath = '/scratch/v14/xf5259/gpssm/vfe/all_optimized_elbo_optimal'
-    #     # tensorboard_savepath = '/scratch/v14/xf5259/gpssm/vfe/SGHMC'
-    #     tensorboard_savepath = '/Users/xuhuifan/GPSSM_results/PG_X/'
-    # else:
-    #     # tensorboard_savepath = '/scratch/v14/xf5259/gpssm/vfe/U_Kernel_SGHMC'
-    #     # tensorboard_savepath = '/scratch/v14/xf5259/gpssm/vfe/SGHMC'
-    #     tensorboard_savepath = '/Users/xuhuifan/GPSSM_results/vfe_sample_X_Aug'
-
-    tensorboard_savepath = '/scratch/v14/xf5259/gpssm/vfe/Oct_results_v6'
-    # tensorboard_savepath = 'Sep_results'
+    tensorboard_savepath = 'results'
 
     model.ARGS.kink_flag = False
     model.ARGS.posterior_sample_spacing = 32
@@ -363,10 +333,6 @@ def main(file_path, ini_file):
     model.ARGS.kernel_train_flag = args.kernel_train_flag
     model.ARGS.test_len = len(Y_test)
 
-    # if (control_inputs.shape[1]+model.ARGS.x_dims[-1])==1:
-    #     model.ARGS.ZZ = tf.convert_to_tensor(np.linspace(-3., 3.0, args.num_inducing)[:, None])
-    # else:
-    # model.ARGS.ZZ = tf.convert_to_tensor(np.random.uniform(low = -2., high = 2.0, size =(args.num_inducing, control_inputs.shape[1]+model.ARGS.x_dims[-1])))
 
     fileid += 'file_id'+str(args.file_id)
 
@@ -382,78 +348,11 @@ def main(file_path, ini_file):
                                        Y_test = Y_test, Y_train_std=Y_train_std, save_path_file=tensorboard_savepath+'/'+file_path[:-1]+'/'+case+'VFE_result_'+file_path[:-1]+'_'+fileid+'.npz',
                                        Y_train = Y_train, case = case, ll_seq = model.ll_seq, running_time_seq = model.running_time_seq, PG_num = model.ARGS.PG_particles)
 
-
-    # plt.plot(model.ll_seq[50:])
-    # plt.savefig(tensorboard_savepath+'/'+file_path[:-1]+'/'+case+'VFE_marginal_ll_'+file_path[:-1]+'_'+fileid+'.pdf', edgecolor='none', format='pdf', bbox_inches='tight')
-    # plt.close()
-
-
-    # predict_y = np.asarray(model.model.predict_x)[:, 1:, 0, 0]*CC_val + DD_val
-    # # predict_x_mean = np.mean(predict_x, axis=0)
-    # # predict_f_of_x = np.asarray(model.model.predict_f_of_x)[:, 1:, 0, 0]
-    # fit_y = np.asarray(model.model.fit_x)[:, 1:(-1), 0]*CC_val + DD_val
-
-
-    #
-    # plt.subplot(3,1,1)
-    # plt.plot(Y_train, label = 'Ground-truth')
-    # plt.plot(model.model.fit_y, label = 'VFE')
-    # # plt.plot(y_samples_training_factnonlin, label = 'Initial')
-    # # plt.plot(Y_train[:-1], label = 'Ground-truth')
-    # # plt.plot(np.mean(fit_y, axis=0)[:-1], label = 'VFE')
-    # plt.legend()
-    # plt.title('Training data, ll: '+str(model.ll_seq[-1]))
-    #
-    # plt.subplot(3,1,2)
-    # # plt.plot(Y_test[:30], label = 'Ground-truth')
-    # # plt.plot(np.mean(predict_y, axis=0)[:30], label = 'VFE')
-    # plt.plot(Y_test, label = 'Ground-truth')
-    # plt.plot(model.model.predict_y, label = 'VFE')
-    # plt.fill_between(range(len(Y_test)), np.mean(model.model.predict_y, axis=0)-np.std(model.model.predict_y, axis=0), np.mean(model.model.predict_y, axis=0)+np.std(model.model.predict_y, axis=0), color = 'yellow')
-    # # plt.plot(np.mean(predict_y_mean, axis=0), label = 'VFE-mean')
-    # # plt.plot(y_samples_testing_factnonlin, label = 'Initial')
-    # plt.legend()
-    #
-    # plt.subplot(3,1,3)
-    # plt.plot(Y_test[:30], label = 'Ground-truth')
-    # plt.plot(model.model.predict_y[:30], label = 'VFE')
-    # # plt.plot(Y_test, label = 'Ground-truth')
-    # # plt.plot(np.mean(predict_y, axis=0), label = 'VFE')
-    # plt.fill_between(range(30), np.mean(model.model.predict_y, axis=0)[:30]-np.std(model.model.predict_y, axis=0)[:30], np.mean(model.model.predict_y, axis=0)[:30]+np.std(model.model.predict_y, axis=0)[:30], color = 'yellow')
-    # # plt.plot(np.mean(predict_y_mean, axis=0)[:30], label = 'VFE-mean')
-    # # plt.plot(y_samples_testing_factnonlin[:30], label = 'Initial')
-    # plt.legend()
-    #
-    #
-    # # Y_test_30 = Y_test[:30].reshape((-1))
-    # # Y_predict_30 = np.mean(model.model.predict_y, axis=0)[:30].reshape((-1))
-    # # RMSE_val = np.sqrt(np.mean((Y_test_30-Y_predict_30)**2))*Y_train_std
-    #
-    # plt.title('Testing data, RMSE: '+str(model.model.RMSE_val))
-    #
-    # plt.tight_layout()
-    # plt.savefig(tensorboard_savepath+'/'+file_path[:-1]+'/'+case+'VFE_visualisation_'+file_path[:-1]+'_'+fileid+'.pdf', edgecolor='none', format='pdf', bbox_inches='tight')
-    # plt.close()
-
-    # if save_parameters:
-    #     np.savez_compressed(
-    #         tensorboard_savepath + '/' + file_path[:-1] + '/VFE_result_' + file_path[:-1] + '_' + fileid + '.npz',
-    #         y_train_vfe=model.model.fit_y, y_test_vfe=model.model.predict_y, Y_test_data=Y_test,
-    #         Y_train_data=Y_train, y_test_factnonlin=y_samples_testing_factnonlin,
-    #         y_train_factnonlin=y_samples_training_factnonlin, Y_train_std=Y_train_std,
-    #         CC_val=CC_val, DD_val=DD_val, log_R_cholesky=log_R_cholesky, log_QQ=log_QQ, Z_val=Z_val,
-    #         U_val=U_val, X_val=X_val, k_lengthscales_0=k_lengthscales_0, k_lengthscales_1=k_lengthscales_1,
-    #         k_lengthscales_2=k_lengthscales_2, k_lengthscales_3=k_lengthscales_3, k_log_variance_0=k_log_variance_0,
-    #         k_log_variance_1=k_log_variance_1, k_log_variance_2=k_log_variance_2, k_log_variance_3=k_log_variance_3)
-    # else:
-    #     np.savez_compressed(tensorboard_savepath+'/'+file_path[:-1]+'/VFE_result_'+file_path[:-1]+'_'+fileid+'.npz', y_train_vfe = model.model.fit_y, y_test_vfe = model.model.predict_y, Y_test_data = Y_test,
-    #                         Y_train_data = Y_train, y_test_factnonlin = y_samples_testing_factnonlin, y_train_factnonlin = y_samples_training_factnonlin, Y_train_std = Y_train_std)
-
     tf.keras.backend.clear_session()
 
 if __name__ == '__main__':
     # argv = sys.argv[1]
-    parser = argparse.ArgumentParser(description='Run vfe-gpssm experiment')
+    parser = argparse.ArgumentParser(description='Run FFVD-gpssm experiment')
     parser.add_argument('--num_inducing', type=int, default=100)
     parser.add_argument('--minibatch_size', type=int, default=1000)
 
@@ -477,40 +376,14 @@ if __name__ == '__main__':
     parser.add_argument('--data_index', type=int, default=4)
     parser.add_argument('--fold', type=int, default=0)
     parser.add_argument('--prior_type', choices=['determinantal', 'normal', 'strauss', 'uniform'], default='normal')
-    # parser.add_argument('--model', choices=['vfegpssm'], default='vfegpssm')
 
 
     args = parser.parse_args()
 
-    # if args.model == 'vfegpssm':
-    # file_path_seq = ['result-4/', 'result-5/', 'result-6/', 'result-7/', 'result-8/', 'result-9/']
-    # file_path_seq = ['result-10/', 'result-11/', 'result-12/']
-    # file_path_seq = ['result-1/', 'result-2/', 'result-3/', 'result-4/', 'result-5/', 'result-6/', 'result-7/','result-8/', 'result-9/']
-    # file_path_seq = ['kink/']
-    # file_path_seq = ['linear_dynamic_systems/']
-    # file_path_seq = ['dryer/']import argparse
-    # file_path_seq = ['ballbeam/']
-    # file_path_seq = ['flutter/']
-    # file_path_seq = ['actuator/']
-    # file_path_seq = ['drive/']
-    # file_path_seq = ['gas_furnace/']
     file_path_seq = ['dryer/', 'drive/', 'gas_furnace/', 'actuator/', 'flutter/', 'ballbeam/']
 
-    # for _ in range(5):
-    # for file_path in file_path_seq:
-        # ini_seq = glob.glob('../vcdt-test/Factnonlin_ini/factnonlin_initialized_10000_' + file_path[:-1] + '*.npz')
-        # ini_seq = glob.glob('../vcdt-test/Factnonlin_ini/factnonlin_initialized_10000_' + file_path[:-1] + '*.npz')
     data_name = file_path_seq[args.file_index]
-    ini_seq = glob.glob('/Users/xuhuifan/GPSSM_results/vcdt_ini_Sep/factnonlin_initialized_10000_' + data_name[:-1] + '*.npz')
-    # ini_seq = glob.glob('../vcdt-test/Factnonlin_ini_Sep/factnonlin_initialized_10000_' + data_name[:-1] + '*.npz')
-    # ini_seq = ['../vcdt-test/2022_05_09/factnonlin_initialized_10_dryer_2022_05_09_07_19_01_313261.npz']
-        # factnonlin_loglikelihood_seq = []
-        # for ini_file in ini_seq:
-        #     result = np.load(ini_file, allow_pickle=True)
-        #     factnonlin_loglikelihood_seq.append(result['factnonlin_loglikelihood'])
-        # max_index = np.argmax(factnonlin_loglikelihood_seq)
-
-        # print(ini_seq[max_index])
+    ini_seq = glob.glob('Factnonlin_ini/factnonlin_initialized_10000_' + data_name[:-1] + '*.npz')
 
     print('####################')
     print('')
