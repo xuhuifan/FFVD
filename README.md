@@ -1,17 +1,16 @@
 # FFVD: Free-Form Variational Dynamics for Gaussian Process State-Space Models
 
-FFVD provides Free-Form Variational Dynamics Inference in Tensorflow. 
+FFVD provides an implementation of the method in the paper [Free-Form Variational Inference for Gaussian Process State-Space Models](https://arxiv.org/abs/2302.09921)  in Tensorflow. 
 
 ## Usage
 
 The main workhorse of our library is the `FFVD_Main.py` function.
 
 
-
 ## Code structure
 ```
 Factnonlin_ini: the model initializations (trained by factorized non-linear model)
-data: the six real world datasets
+data: the six real-world datasets
 vfegpssm: the source code of FFVD
 ```
 
